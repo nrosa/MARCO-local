@@ -1,0 +1,9 @@
+if [[ ${SLURM_NODELIST:1:1} = "[" ]]
+then
+    export MASTER_ADDR=${SLURM_NODELIST:0:1}${SLURM_NODELIST:2:3}
+else
+    export MASTER_ADDR=${SLURM_NODELIST:0:4}
+fi
+
+export MASTER_PORT=12340
+export WORLD_SIZE=$(( $SLURM_NNODES*$SLURM_NTASKS_PER_NODE ))
