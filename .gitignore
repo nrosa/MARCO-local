@@ -1,0 +1,7 @@
+# Specify filepatterns you want git to ignore.
+figures/*
+slurmoutpus/*
+wandb/*
+batchfiles/*
+*.out
+*.pyc
