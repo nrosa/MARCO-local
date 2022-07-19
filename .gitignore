@@ -5,3 +5,7 @@ wandb/*
 batchfiles/*
 *.out
 *.pyc
+
+# Hard example files
+cross_entropy.json
+entropy.json
