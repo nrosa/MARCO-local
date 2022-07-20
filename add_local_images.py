@@ -141,7 +141,6 @@ def add_images(image_cnt, label_dist, input_dir, output_dir):
     else:
         for label in LABEL_DIST.keys():
             images = img_fact.get_image_lst(label=label)
-            print(label, label_dist)
             img_cnt = int(round(image_cnt * LABEL_DIST[label][label_dist]))
             _copy_images(images, img_cnt, output_dir)
 
