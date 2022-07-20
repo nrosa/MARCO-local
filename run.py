@@ -136,6 +136,8 @@ parser.add_argument('--clip-grad', type=float, default=None, metavar='NORM',
                     help='Clip gradient norm (default: None, no clipping)')
 parser.add_argument('--clip-mode', type=str, default='norm',
                     help='Gradient clipping mode. One of ("norm", "value", "agc")')
+parser.add_argument('--gradient_accumulate_every', type=int, default=1,
+                    help='Number of chunks to divide the batch into')
 
 
 # Learning rate schedule parameters
@@ -763,8 +765,11 @@ def train_one_epoch(
             input = input.contiguous(memory_format=torch.channels_last)
 
         with amp_autocast():
-            output = model(input)
-            loss = loss_fn(output, target)
+            chunked_input = torch.chunk(input, args.gradient_accumulate_every)
+            chunked_target = torch.chunk(target, args.gradient_accumulate_every)
+            for input, target in zip(chunked_input, chunked_target):
+                output = model(input)
+                loss = loss_fn(output, target) / args.gradient_accumulate_every
 
         if not args.distributed:
             losses_m.update(loss.item(), input.size(0))
