@@ -52,7 +52,7 @@ class ImageFactory(object):
         for key in self.class_to_idx:
             self.idx_to_class[self.class_to_idx[key]] = key
 
-        self.images = [Image(x[0], self.idx_to_class[x[1]]) for x in samples]
+        self.images = sorted([Image(x[0], self.idx_to_class[x[1]]) for x in samples])
 
     def find_classes(self, directory: str):
         classes = sorted(entry.name for entry in os.scandir(directory) if entry.is_dir())
@@ -116,9 +116,9 @@ class ImageFactory(object):
             return [x for x in self.images if x.label==label]
 
 
-def _copy_images(imgs, amount, destination):
+def _copy_images(imgs, amount, destination, seed=0):
     assert len(imgs) >= amount
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(seed=seed)
     rng.shuffle(imgs)
 
     for img in imgs[:amount]:
@@ -130,13 +130,13 @@ def _copy_images(imgs, amount, destination):
     print(f"Copied {amount} images...  ")
 
 
-def add_images(image_cnt, label_dist, input_dir, output_dir):
+def add_images(image_cnt, label_dist, input_dir, output_dir, seed=0):
     img_fact = ImageFactory(input_dir)
 
     if label_dist is None:
         images = img_fact.get_image_lst()
 
-        _copy_images(images, image_cnt, output_dir)
+        _copy_images(images, image_cnt, output_dir, seed=seed)
 
     else:
         for label in LABEL_DIST.keys():

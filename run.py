@@ -373,7 +373,13 @@ def main():
     if args.add_local_images:
         if args.local_rank == 0:
             import add_local_images
-            add_local_images.add_images(args.image_cnt, args.label_dist, args.local_data_dir, os.path.join(args.data_dir, 'train'))    
+            add_local_images.add_images(
+                args.image_cnt,
+                args.label_dist,
+                args.local_data_dir,
+                os.path.join(args.data_dir, 'train'),
+                seed=args.seed
+            )    
 
 
     # Barrier before loading the datasets to make sure all the data has been copied
@@ -764,30 +770,36 @@ def train_one_epoch(
         if args.channels_last:
             input = input.contiguous(memory_format=torch.channels_last)
 
-        with amp_autocast():
-            chunked_input = torch.chunk(input, args.gradient_accumulate_every)
-            chunked_target = torch.chunk(target, args.gradient_accumulate_every)
-            for input, target in zip(chunked_input, chunked_target):
+        chunked_input = torch.chunk(input, args.gradient_accumulate_every)
+        chunked_target = torch.chunk(target, args.gradient_accumulate_every)
+        
+        optimizer.zero_grad()
+        for input, target in zip(chunked_input, chunked_target):
+
+            with amp_autocast():
                 output = model(input)
                 loss = loss_fn(output, target) / args.gradient_accumulate_every
 
-        if not args.distributed:
-            losses_m.update(loss.item(), input.size(0))
+            if not args.distributed:
+                losses_m.update(loss.item(), input.size(0))
 
-        optimizer.zero_grad()
-        if loss_scaler is not None:
-            loss_scaler(
-                loss, optimizer,
-                clip_grad=args.clip_grad, clip_mode=args.clip_mode,
-                parameters=model_parameters(model, exclude_head='agc' in args.clip_mode),
-                create_graph=second_order)
-        else:
-            loss.backward(create_graph=second_order)
-            if args.clip_grad is not None:
-                dispatch_clip_grad(
-                    model_parameters(model, exclude_head='agc' in args.clip_mode),
-                    value=args.clip_grad, mode=args.clip_mode)
-            optimizer.step()
+            
+            # TODO implement with gradient_accumulate_every
+            if loss_scaler is not None:
+                raise Exception('Not implemented')
+                # loss_scaler(
+                #     loss, optimizer,
+                #     clip_grad=args.clip_grad, clip_mode=args.clip_mode,
+                #     parameters=model_parameters(model, exclude_head='agc' in args.clip_mode),
+                #     create_graph=second_order)
+            else:
+                loss.backward(create_graph=second_order)
+                if args.clip_grad is not None:
+                    dispatch_clip_grad(
+                        model_parameters(model, exclude_head='agc' in args.clip_mode),
+                        value=args.clip_grad, mode=args.clip_mode)
+    
+        optimizer.step()
 
         if model_ema is not None:
             model_ema.update(model)
