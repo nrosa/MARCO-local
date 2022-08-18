@@ -52,7 +52,7 @@ class ImageFactory(object):
         for key in self.class_to_idx:
             self.idx_to_class[self.class_to_idx[key]] = key
 
-        self.images = sorted([Image(x[0], self.idx_to_class[x[1]]) for x in samples])
+        self.images = sorted([Image(x[0], self.idx_to_class[x[1]]) for x in samples],key=lambda x: x.filepath)
 
     def find_classes(self, directory: str):
         classes = sorted(entry.name for entry in os.scandir(directory) if entry.is_dir())
