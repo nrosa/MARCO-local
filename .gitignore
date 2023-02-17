@@ -9,3 +9,4 @@ batchfiles/*
 # Hard example files
 cross_entropy.json
 entropy.json
+marco-local.code-workspace
