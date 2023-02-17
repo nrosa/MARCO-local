@@ -66,6 +66,12 @@ The local dataset should only contain the four label folders.
         └── ...
 ```
 
+### Data used for the paper
+
+Data that was used for the paper can be downloaded from the following links.
+
+[C3 Test set](https://zenodo.org/record/4635300)
+<!-- TODO [Local images for retraining]() -->
 
 ## Training Models
 
