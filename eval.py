@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
-""" ImageNet Training Script
+"""
+Copyright 2023 Nicholas Rosa
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Adapted from timm (https://github.com/rwightman)
+ImageNet Training Script
 This is intended to be a lean and easily modifiable ImageNet training script that reproduces ImageNet
 training results with some of the latest networks and training techniques. It favours canonical PyTorch
 and standard Python style over trying to be able to 'do it all.' That said, it offers quite a few speed
@@ -9,7 +25,11 @@ This script was started from an early version of the PyTorch ImageNet example
 NVIDIA CUDA specific speedups adopted from NVIDIA Apex examples
 (https://github.com/NVIDIA/apex/tree/master/examples/imagenet)
 Hacked together by / Copyright 2020 Ross Wightman (https://github.com/rwightman)
+
+
 """
+
+
 import argparse
 import time
 import yaml
