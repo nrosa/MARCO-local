@@ -1,5 +1,7 @@
 # Local MARCO 
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7647927.svg)](https://doi.org/10.5281/zenodo.7647927)
+
 A project to train a crystal outcome classification model using the MARCO dataset supplemented with local laboratory images.
 
 ## Datasets
@@ -71,7 +73,12 @@ The local dataset should only contain the four label folders.
 Data that was used for the paper can be downloaded from the following links.
 
 [C3 Test set](https://zenodo.org/record/4635300)
-<!-- TODO [Local images for retraining]() -->
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4635300.svg)](https://doi.org/10.5281/zenodo.4635300)
+
+[Local images for retraining](https://zenodo.org/record/7655203)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7655203.svg)](https://doi.org/10.5281/zenodo.7655203)
 
 ## Training Models
 
